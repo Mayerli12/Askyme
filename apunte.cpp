@@ -24,3 +24,4 @@ const QString Apunte::toString() const
 {
     return m_termino + ".- " + m_concepto;
 }
+

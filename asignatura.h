@@ -3,7 +3,7 @@
 
 #include <QString>
 
-#include "tema.h"
+#include <tema.h>
 
 class Asignatura
 {

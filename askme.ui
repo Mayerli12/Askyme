@@ -101,6 +101,9 @@
    <property name="toolTip">
     <string>Autores de la aplicación</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionSalir">
    <property name="text">

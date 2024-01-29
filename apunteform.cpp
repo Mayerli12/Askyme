@@ -6,11 +6,17 @@ ApunteForm::ApunteForm(QWidget *parent) :
     ui(new Ui::ApunteForm)
 {
     ui->setupUi(this);
+     connect(ui->cmbAsignaturas, SIGNAL(currentIndexChanged(int)), this, SLOT(on_cmbAsignaturas_currentIndexChanged(int)));
 }
 
 ApunteForm::~ApunteForm()
 {
     delete ui;
+}
+
+QList<Asignatura *> &ApunteForm::asignaturas()
+{
+    return *m_asignaturas;
 }
 
 void ApunteForm::setAsignaturas(QList<Asignatura *> &asignaturas)
@@ -32,9 +38,12 @@ void ApunteForm::on_btnAgregarAsignatura_released()
     QString nombre = QInputDialog::getText(this,"Nueva asignatura","Nombre",QLineEdit::Normal,"",&ok);
 
     if (ok && !nombre.isEmpty()){
+        Asignatura *nuevaAsignatura = new Asignatura(nombre);
         m_asignaturas->append(new Asignatura(nombre));
         cargarAsignaturas();
         ui->cmbAsignaturas->setCurrentText(nombre);
+        // se debe emitir una señal de la nueva asignatura
+        emit nuevaAsignaturaCreada(nuevaAsignatura);
     }
 }
 
@@ -46,13 +55,7 @@ void ApunteForm::on_btnRefAsig_clicked()
 
 void ApunteForm::on_cmbAsignaturas_currentIndexChanged(int index)
 {
-    ui->cmbTemas->clear();
-    if (index >= 0 && index < m_asignaturas->size()){
-        Asignatura *a = m_asignaturas->at(index);
-        foreach(Tema *t, a->temas()){
-            ui->cmbTemas->addItem(t->nombre());
-        }
-    }
+    cargarTemas(index);
 }
 
 
@@ -107,14 +110,38 @@ void ApunteForm::on_buttonBox_accepted()
     // Agregar el apunte al tema seleccionado
     a->temas().at(temaIndex)->agregarApunte(apunte);
     // Emitir una señal
-    emit apunteTomado(apunte);
+    if (QObject::receivers(SIGNAL(apunteTomado(Apunte*))) > 0) {
+        emit apunteTomado(apunte);
+    }
+
+    // Limpiar los campos
+    ui->txtTermino->clear();
+    ui->txtConcepto->clear();
+    ui->cmbAsignaturas->setCurrentIndex(-1);
+    ui->cmbTemas->clear();
+
     // Cerrar la ventana
     this->parentWidget()->close();
+
 }
 
 
 void ApunteForm::on_buttonBox_rejected()
 {
     this->parentWidget()->close();
+}
+
+void ApunteForm::cargarTemas(int indice)
+{
+    ui->cmbTemas->clear();
+        if(indice >= 0 && indice < m_asignaturas->size())
+        {
+            Asignatura *a = m_asignaturas->at(indice);
+            QList<Tema *> temas = a->temas();
+            foreach(Tema *t, temas)
+            {
+                ui->cmbTemas->addItem(t->nombre());
+            }
+        }
 }
 

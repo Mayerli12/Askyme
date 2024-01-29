@@ -2,6 +2,7 @@
 #define APUNTE_H
 
 #include <QString>
+#include <QStringList>
 
 class Apunte
 {
@@ -12,6 +13,8 @@ public:
     const QString &termino() const;
     const QString &concepto() const;
     const QString toString() const;
+
+    const QStringList obtenerConceptos(const QString &termino) const;
 
 private:
     QString m_termino;

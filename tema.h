@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "apunte.h"
+#include <apunte.h>
 
 class Tema
 {
@@ -16,6 +16,7 @@ public:
     const QString &nombre() const;
     const QList<Apunte *> &apuntes() const;
     const QString toString() const;
+
 private:
     QString m_nombre;
     QList<Apunte*> m_apuntes;

@@ -7,7 +7,8 @@
 #include <QAbstractButton>
 #include <QMessageBox>
 
-#include "asignatura.h"
+#include <asignatura.h>
+#include <listform.h>
 
 namespace Ui {
 class ApunteForm;
@@ -21,11 +22,13 @@ public:
     explicit ApunteForm(QWidget *parent = nullptr);
     ~ApunteForm();
 
+    QList<Asignatura *> &asignaturas();
     void setAsignaturas(QList<Asignatura *> &newAsignaturas);
     void cargarAsignaturas();
 
 signals:
     void apunteTomado(Apunte *apunte);
+    void nuevaAsignaturaCreada(Asignatura *nuevaAsignatura);
 
 private slots:
     void on_btnAgregarAsignatura_released();
@@ -40,9 +43,12 @@ private slots:
 
     void on_buttonBox_rejected();
 
+
+
 private:
     Ui::ApunteForm *ui;
     QList<Asignatura*> *m_asignaturas;
+    void cargarTemas(int indice);
 };
 
 #endif // APUNTEFORM_H

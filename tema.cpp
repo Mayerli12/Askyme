@@ -31,3 +31,5 @@ const QString Tema::toString() const
     }
     return str;
 }
+
+
